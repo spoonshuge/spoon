@@ -1,71 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Sheet CORS Demo</title>
+  <title>Giveaway Entry</title>
 </head>
 <body>
-<h1>Enter the Giveaway</h1>
-<form id="entryForm">
-  <label>Name:<br>
-    <input type="text" name="name" required>
-  </label><br><br>
-  <label>Display Name:<br>
-    <input type="text" name="displayName" required>
-  </label><br><br>
-  <label>Contact Type:<br>
-    <select name="contactType" required>
-      <option>Email</option>
-      <option>Text</option>
-      <option>Instagram</option>
-    </select>
-  </label><br><br>
-  <label>Contact:<br>
-    <input type="text" name="contact" required>
-  </label><br><br>
-  <label>Entries:<br>
-    <input type="number" name="entries" min="1" value="1" required>
-  </label><br><br>
-  <label>Code:<br>
-    <input type="text" name="code" required>
-  </label><br><br>
-  <button type="submit">Submit</button>
-</form>
+  <h1>Enter the Giveaway</h1>
+  <form id="entryForm">
+    <label>Name:<br>
+      <input type="text" name="name" required>
+    </label><br><br>
 
-<p id="status"></p>
+    <label>Display Name:<br>
+      <input type="text" name="displayName" required>
+    </label><br><br>
 
-<script>
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzA1DXjfI90tqqCNUdg8GquGnq3u0KkTQ5gS_UQjG9rzcEmrU_RgSh1TFE8IIMjSbZA/exec';
+    <label>Contact Type:<br>
+      <select name="contactType" required>
+        <option>Email</option>
+        <option>Text</option>
+        <option>Instagram</option>
+      </select>
+    </label><br><br>
 
-  document
-    .getElementById('entryForm')
-    .addEventListener('submit', e => {
-      e.preventDefault();
-      const f = e.target;
-      const data = {
-        name:         f.name.value,
-        displayName:  f.displayName.value,
-        contactType:  f.contactType.value,
-        contact:      f.contact.value,
-        entries:      Number(f.entries.value),
-        code:         f.code.value
-      };
-      fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(r => r.json())
-      .then(resp => {
-        document.getElementById('status').textContent =
-          resp.status === 'ok' ? '✅ Submitted!' : '❌ Error';
-        f.reset();
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById('status').textContent = '❌ Submission failed';
-      });
+    <label>Contact:<br>
+      <input type="text" name="contact" required>
+    </label><br><br>
+
+    <label>Entries:<br>
+      <input type="number" name="entries" min="1" value="1" required>
+    </label><br><br>
+
+    <label>Code:<br>
+      <input type="text" name="code" required>
+    </label><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzA1DXjfI90tqqCNUdg8GquGnq3u0KkTQ5gS_UQjG9rzcEmrU_RgSh1TFE8IIMjSbZA/exec';
+
+    document.getElementById('entryForm')
+      .addEventListener('submit', function(e) {
+        e.preventDefault();
+        const f = e.target;
+        const data = {
+          name:         f.name.value,
+          displayName:  f.displayName.value,
+          contactType:  f.contactType.value,
+          contact:      f.contact.value,
+          entries:      Number(f.entries.value),
+          code:         f.code.value
+        };
+
+        fetch(API_URL, {
+          method: 'POST',
+          // no headers → defaults to text/plain → “simple” request → no preflight
+          body: JSON.stringify(data)
+        })
+        .then(r => r.json())
+        .then(resp => {
+          document.getElementById('status').textContent =
+            resp.status === 'ok' ? '✅ Submitted!' : '❌ Error';
+          f.reset();
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('status').textContent = '❌ Submission failed';
+        });
     });
-</script>
+  </script>
 </body>
 </html>
