@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Write to Google Sheet V0.1</title>
+    <title>Write to Google Sheet V0.2</title>
   </head>
   <body>
     <h1>Send input to your Sheet</h1>
@@ -27,21 +27,14 @@
 
       form.addEventListener('submit', e => {
         e.preventDefault();
-        const val = inputEl.value.trim();
-        fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ input: val })
-        })
-        .then(r => r.json())
-        .then(data => {
-          outputEl.textContent = data.message;
-          inputEl.value = '';
-        })
-        .catch(err => {
-          console.error(err);
-          outputEl.textContent = '❌ Error: ' + err.message;
-        });
+        const val = encodeURIComponent(inputEl.value.trim());
+        fetch(`${SCRIPT_URL}?input=${val}`)
+          .then(r => r.json())
+          .then(data => {
+            outputEl.textContent = data.message;
+            inputEl.value = '';
+          })
+          .catch(err => outputEl.textContent = '❌ Error: '+err.message);
       });
     </script>
   </body>
