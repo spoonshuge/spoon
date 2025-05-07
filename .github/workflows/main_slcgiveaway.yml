@@ -70,6 +70,6 @@ jobs:
           app-name: 'sLcgiveaway'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A90AC5DC1192419A86692F7C50AC2B2A }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EC6A6B65456845AAB775F507A72EE3D5 }}
           sku: 'flexconsumption'
         
