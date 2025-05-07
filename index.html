@@ -5,32 +5,67 @@
   <title>Sheet CORS Demo</title>
 </head>
 <body>
-  <h1>Sheet Data:</h1>
-  <pre id="output">loading…</pre>
+<h1>Enter the Giveaway</h1>
+<form id="entryForm">
+  <label>Name:<br>
+    <input type="text" name="name" required>
+  </label><br><br>
+  <label>Display Name:<br>
+    <input type="text" name="displayName" required>
+  </label><br><br>
+  <label>Contact Type:<br>
+    <select name="contactType" required>
+      <option>Email</option>
+      <option>Text</option>
+      <option>Instagram</option>
+    </select>
+  </label><br><br>
+  <label>Contact:<br>
+    <input type="text" name="contact" required>
+  </label><br><br>
+  <label>Entries:<br>
+    <input type="number" name="entries" min="1" value="1" required>
+  </label><br><br>
+  <label>Code:<br>
+    <input type="text" name="code" required>
+  </label><br><br>
+  <button type="submit">Submit</button>
+</form>
 
-  <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzA1DXjfI90tqqCNUdg8GquGnq3u0KkTQ5gS_UQjG9rzcEmrU_RgSh1TFE8IIMjSbZA/exec';
+<p id="status"></p>
 
-    // 1) Fetch & display sheet rows
-    fetch(API_URL)
-      .then(r => r.json())
-      .then(rows => {
-        document.getElementById('output').textContent =
-          rows.map(r => r.join(' | ')).join('\n');
+<script>
+  const API_URL = 'https://script.google.com/macros/s/XXXX/exec';
+
+  document
+    .getElementById('entryForm')
+    .addEventListener('submit', e => {
+      e.preventDefault();
+      const f = e.target;
+      const data = {
+        name:         f.name.value,
+        displayName:  f.displayName.value,
+        contactType:  f.contactType.value,
+        contact:      f.contact.value,
+        entries:      Number(f.entries.value),
+        code:         f.code.value
+      };
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
       })
-      .catch(console.error);
-
-    // 2) Example POST (uncomment to test writing)
-    /*
-    fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'Bob', score: 99 })
-    })
-    .then(r => r.json())
-    .then(console.log)
-    .catch(console.error);
-    */
-  </script>
+      .then(r => r.json())
+      .then(resp => {
+        document.getElementById('status').textContent =
+          resp.status === 'ok' ? '✅ Submitted!' : '❌ Error';
+        f.reset();
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('status').textContent = '❌ Submission failed';
+      });
+    });
+</script>
 </body>
 </html>
