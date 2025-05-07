@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sheet CORS Demo</title>
+</head>
+<body>
+  <h1>Sheet Data:</h1>
+  <pre id="output">loading…</pre>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzA1DXjfI90tqqCNUdg8GquGnq3u0KkTQ5gS_UQjG9rzcEmrU_RgSh1TFE8IIMjSbZA/exec';
+
+    // 1) Fetch & display sheet rows
+    fetch(API_URL)
+      .then(r => r.json())
+      .then(rows => {
+        document.getElementById('output').textContent =
+          rows.map(r => r.join(' | ')).join('\n');
+      })
+      .catch(console.error);
+
+    // 2) Example POST (uncomment to test writing)
+    /*
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Bob', score: 99 })
+    })
+    .then(r => r.json())
+    .then(console.log)
+    .catch(console.error);
+    */
+  </script>
+</body>
+</html>
