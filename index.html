@@ -1,47 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Giveaway Entry</title>
-</head>
-<body>
-  <h1>Enter the Giveaway v1</h1>
-  <form id="entryForm">
-    <!-- your inputs… -->
-  </form>
-  <p id="status"></p>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Write to Google Sheet</title>
+  </head>
+  <body>
+    <h1>Send input to your Sheet</h1>
 
-  <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzA1DXjfI90tqqCNUdg8GquGnq3u0KkTQ5gS_UQjG9rzcEmrU_RgSh1TFE8IIMjSbZA/exec';
+    <form id="inputForm">
+      <input
+        type="text"
+        id="textInput"
+        placeholder="Enter something…"
+        required
+      />
+      <button type="submit">Submit</button>
+    </form>
 
-    document.getElementById('entryForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const f = e.target;
-      const data = {
-        name:        f.name.value,
-        displayName: f.displayName.value,
-        contactType: f.contactType.value,
-        contact:     f.contact.value,
-        entries:     Number(f.entries.value),
-        code:        f.code.value
-      };
+    <p id="responseMessage"></p>
 
-      fetch(API_URL, {
-        method: 'POST',
-        // ↳ NO headers here! Browser will default to text/plain → simple request
-        body: JSON.stringify(data)
-      })
-      .then(r => r.json())
-      .then(resp => {
-        document.getElementById('status').textContent =
-          resp.status === 'ok' ? '✅ Submitted!' : '❌ Error';
-        f.reset();
-      })
-      .catch(err => {
-        console.error(err);
-        document.getElementById('status').textContent = '❌ Submission failed';
+    <script>
+      const SCRIPT_URL = 'https://script.google.com/macros/s/⟨YOUR_DEPLOY_ID⟩/exec';
+      const form     = document.getElementById('inputForm');
+      const inputEl  = document.getElementById('textInput');
+      const outputEl = document.getElementById('responseMessage');
+
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const val = inputEl.value.trim();
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ input: val })
+        })
+        .then(r => r.json())
+        .then(data => {
+          outputEl.textContent = data.message;
+          inputEl.value = '';
+        })
+        .catch(err => {
+          console.error(err);
+          outputEl.textContent = '❌ Error: ' + err.message;
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
